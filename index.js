@@ -2,7 +2,9 @@ const http = require('http')
 const express = require('express')
 const app = express()
 
-let alumno = [
+app.use(express.json());
+
+let alumnos = [
     {id: '1',nombre: 'Angel', numero: '987674324'},
     {id: '2',nombre: 'Michael', numero: '985654323'},
     {id: '3',nombre: 'Juan', numero: '987656322'},
@@ -13,17 +15,17 @@ let alumno = [
 let date = new Date();
 
 app.get('/', (request, response) => {
-    response.json(alumno)
+    response.json(alumnos)
 })
 
 app.get('/info', (request, response) => {
-    response.send(`<h1>Phonebook has info for  ${alumno.length}  people</h1><h1>`+ date + '</h1>')
+    response.send(`<h1>Phonebook has info for  ${alumnos.length}  people</h1><h1>`+ date + '</h1>')
 })
 
 
 app.get('/info/:id', (request, response) => {
     const id = request.params.id
-    const note = alumno.find(alumno => alumno.id === id)
+    const note = alumnos.find(alumno => alumno.id === id)
     if (note) {
         response.json(note)
     } else {
@@ -31,26 +33,38 @@ app.get('/info/:id', (request, response) => {
     }
 })
 
-app.get('/api/alumnos',(req,res) => {
-    res.send(alumnos);
+app.get('/api/alumnos',(request,response) => {
+    request.send(alumnos);
 });
 
 app.get('/api/alumnos/:id', (request, response) => {
     const id = request.params.id
-    const alumnos = alumno.find(alumno => alumno.id === id)
+    const alumno = alumnos.find(alumno => alumno.id === id)
     
-    if (!alumnos) {
+    if (!alumno) {
         response.status(404).send(`No se ha encontrado el registro con el id ${request.params.id}.`)
     } else {
-        response.send(alumnos); 
+        response.send(alumno); 
     }
 });
 
 app.delete('/api/alumnos/:id', (request, response) => {
     const id = request.params.id
-    alumno = alumno.filter(alumno => alumno.id !== id)
+    alumno = alumnos.filter(alumno => alumno.id !== id)
   
     response.status(204).end()
+});
+
+app.post('/api/alumnos', (request, response) => {
+    const alumno = {
+        id: Math.round(Math.random()*100000),
+        nombre: req.body.nombre,
+        numero: req.body.numero,
+    };
+    console.log(alumno)
+    alumnos.push(alumno);
+    request.send(alumno);
+    response.json(alumno)
 });
 
 const PORT = 3001
