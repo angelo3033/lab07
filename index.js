@@ -30,6 +30,28 @@ app.get('/info/:id', (request, response) => {
         response.status(404).end()
     }
 })
+
+app.get('/api/alumnos',(req,res) => {
+    res.send(alumnos);
+});
+
+app.get('/api/alumnos/:id', (request, response) => {
+    const id = request.params.id
+    const alumnos = alumno.find(alumno => alumno.id === id)
+    
+    if (!alumnos) {
+        response.status(404).send(`No se ha encontrado el registro con el id ${request.params.id}.`)
+    } else {
+        response.send(alumnos); 
+    }
+});
+
+app.delete('/api/alumnos/:id', (request, response) => {
+    const id = request.params.id
+    alumno = alumno.filter(alumno => alumno.id !== id)
+  
+    response.status(204).end()
+});
 const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
