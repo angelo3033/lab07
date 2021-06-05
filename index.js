@@ -15,7 +15,7 @@ let alumnos = [
 let date = new Date();
 
 app.get('/', (request, response) => {
-    response.json(alumnos)
+    response.send('<h1>Hola Mundo estoy probando pipeline</h1>')
 })
 
 app.get('/info', (request, response) => {
@@ -34,7 +34,7 @@ app.get('/info/:id', (request, response) => {
 })
 
 app.get('/api/alumnos',(request,response) => {
-    request.send(alumnos);
+    response.json(alumnos);
 });
 
 app.get('/api/alumnos/:id', (request, response) => {
